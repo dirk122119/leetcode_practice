@@ -21,8 +21,8 @@ impl MyLinkedList {
     // }
     
     fn add_at_head(&mut self, val: i32) {
-        let mut temp = self.next.take();
-        let mut new_node = MyLinkedList {
+        let temp = self.next.take();
+        let new_node = MyLinkedList {
             val: val,
             next: temp,
         };
@@ -30,8 +30,15 @@ impl MyLinkedList {
 
     }
     
-    fn add_at_tail(&self, val: i32) {
-        
+    fn add_at_tail(&mut self, val: i32) {
+        let mut current = self;
+        while let Some(ref mut node) = current.next {
+            current = node;
+        }
+        current.next = Some(Box::new(MyLinkedList {
+            val: val,
+            next: None,
+        }));
     }
     
     fn add_at_index(&self, index: i32, val: i32) {
@@ -73,6 +80,16 @@ mod tests {
         list.add_at_head(3);
         println!("{:?}", list);
         assert_eq!(list.next.unwrap().val, 3);
+        // assert_eq!(list.next.unwrap().val, 1);
+    }
+
+    #[test]
+    fn test_add_at_tail() {
+        let mut list = MyLinkedList::new();
+        list.add_at_tail(2);
+        list.add_at_tail(3);
+        println!("{:?}", list);
+        assert_eq!(list.next.unwrap().val, 2);
         // assert_eq!(list.next.unwrap().val, 1);
     }
 }
