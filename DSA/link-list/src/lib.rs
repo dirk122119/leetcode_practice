@@ -39,6 +39,16 @@ impl<T: std::fmt::Debug> MyLinkedList<T> {
     }
     
     fn add_at_tail(&mut self, val: T) {
+        let new_node = Node::new(val);
+        if let None = self.head {
+            self.head = Some(new_node);
+            return;
+        }
+        let mut current = self.head.as_mut().unwrap();
+        while let Some(ref mut node) = current.next {
+            current = node;
+        }
+        current.next = Some(new_node);
     }
     
     fn add_at_index(&self, index: i32, val: T) {
@@ -85,6 +95,7 @@ mod tests {
     fn test_add_at_tail() {
         let mut list:MyLinkedList<i32> = MyLinkedList::new();
         list.add_at_tail(1);
+        list.add_at_tail(2);
         assert_eq!(list.head.is_none(), false);
     }
 
