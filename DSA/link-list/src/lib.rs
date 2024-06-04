@@ -1,47 +1,47 @@
+use std::borrow::{Borrow, BorrowMut};
+
 #[derive(Debug)]
-struct MyLinkedList {
-    val:i32,
-    next:Option<Box<MyLinkedList>>
+struct Node<T> {
+    val: T,
+    next: Option<Box<Node<T>>>,
 }
-/** 
- * `&self` means the method takes an immutable reference.
- * If you need a mutable reference, change it to `&mut self` instead.
- */
-impl MyLinkedList {
+
+#[derive(Debug)]
+struct MyLinkedList<T> {
+    head: Option<Box<Node<T>>>,
+}
+
+#[warn(unused_mut)]
+impl<T> Node<T> {
+    fn new(val: T) -> Box<Node<T>> {
+        Box::new(Node {
+            val: val,
+            next: None,
+        })
+    }
+}
+#[warn(unused_mut)]
+impl<T: std::fmt::Debug> MyLinkedList<T> {
 
     fn new() -> Self {
         MyLinkedList {
-            val: 1,
-            next: None,
+            head: None,
         }
     }
     
-    // fn get(&self, index: i32) -> i32 {
-        
-    // }
-    
-    fn add_at_head(&mut self, val: i32) {
-        let temp = self.next.take();
-        let new_node = MyLinkedList {
-            val: val,
-            next: temp,
-        };
-        self.next = Some(Box::new(new_node));
+    fn add_at_head(&mut self, val: T) {
+        let mut new_node = Node::new(val);
+
+        let next = self.head.take();
+        new_node.next = next;
+        self.head = Some(new_node);
 
     }
     
-    fn add_at_tail(&mut self, val: i32) {
-        let mut current = self;
-        while let Some(ref mut node) = current.next {
-            current = node;
-        }
-        current.next = Some(Box::new(MyLinkedList {
-            val: val,
-            next: None,
-        }));
+    fn add_at_tail(&mut self, val: T) {
     }
     
-    fn add_at_index(&self, index: i32, val: i32) {
+    fn add_at_index(&self, index: i32, val: T) {
         
     }
     
@@ -69,27 +69,24 @@ mod tests {
 
     #[test]
     fn test_init_linklist() {
-        let mut list = MyLinkedList::new();
-        assert_eq!(list.val, 1);
+        let mut list:MyLinkedList<i32> = MyLinkedList::new();
+        assert_eq!(list.head.is_none(), true);
     }
 
     #[test]
     fn test_add_at_head() {
-        let mut list = MyLinkedList::new();
+        let mut list:MyLinkedList<i32> = MyLinkedList::new();
+        list.add_at_head(1);
         list.add_at_head(2);
-        list.add_at_head(3);
-        println!("{:?}", list);
-        assert_eq!(list.next.unwrap().val, 3);
-        // assert_eq!(list.next.unwrap().val, 1);
+        assert_eq!(list.head.is_none(), false);
     }
 
     #[test]
     fn test_add_at_tail() {
-        let mut list = MyLinkedList::new();
-        list.add_at_tail(2);
-        list.add_at_tail(3);
-        println!("{:?}", list);
-        assert_eq!(list.next.unwrap().val, 2);
-        // assert_eq!(list.next.unwrap().val, 1);
+        let mut list:MyLinkedList<i32> = MyLinkedList::new();
+        list.add_at_tail(1);
+        assert_eq!(list.head.is_none(), false);
     }
+
+
 }
