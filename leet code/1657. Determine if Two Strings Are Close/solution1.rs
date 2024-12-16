@@ -1,6 +1,7 @@
 struct Solution;
 
 use std::collections::HashMap;
+use std::collections::HashSet;
 
 impl Solution {
     pub fn close_strings(word1: String, word2: String) -> bool {
@@ -19,27 +20,15 @@ impl Solution {
             word2_map.entry(c).and_modify(|count| *count+=1).or_insert(1);
         }
 
-        let mut vec_key1: Vec<_> = word1_map.clone().into_keys().collect::<Vec<_>>();
-        let mut vec_key2: Vec<_> = word2_map.clone().into_keys().collect::<Vec<_>>();
-        
-        vec_key1.sort();
-        vec_key2.sort();
+        let keys1: HashSet<_> = word1_map.keys().collect();
+        let keys2: HashSet<_> = word2_map.keys().collect();
+        let mut vals1: Vec<_> = word1_map.values().collect();
+        let mut vals2: Vec<_> = word2_map.values().collect();
 
-        if vec_key1 != vec_key2 {
-            return false
-        } 
+        vals1.sort();
+        vals2.sort();
 
-        let mut vec_value1: Vec<_> = word1_map.into_values().collect::<Vec<_>>();
-        let mut vec_value2: Vec<_> = word2_map.into_values().collect::<Vec<_>>();
-        
-        vec_value1.sort();
-        vec_value2.sort();
-
-        if vec_value1 != vec_value2 {
-            return false
-        }
-
-        true
+        keys1 == keys2 && vals1 == vals2
     }
 }
 
