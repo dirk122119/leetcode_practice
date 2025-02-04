@@ -18,13 +18,15 @@ struct Solution;
 
 impl Solution {
     pub fn reverse_list(mut head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
-        let mut re_list: Option<Box<ListNode>> = None;
+        let mut prev_node:Option<Box<ListNode>> = None;
+
         while let Some(mut current) = head {
-            head = current.next;
-            current.next = re_list;
-            re_list = Some(current);
+            let next_node = current.next.take();
+            current.next = prev_node;
+            prev_node = Some(current);
+            head = next_node;
         }
-        re_list
+        prev_node
     }
 }
 
