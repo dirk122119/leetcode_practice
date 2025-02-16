@@ -25,15 +25,10 @@ struct Solution;
 impl Solution {
     pub fn max_depth(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
         match root {
-            Some(n) => {
-                let node = n.borrow();
-                let left = Self::max_depth(node.left.clone());
-                let right = Self::max_depth(node.right.clone());
-                if left > right {
-                    left + 1
-                } else {
-                    right + 1
-                }
+            Some(node) => {
+                let l_depth = Self::max_depth(node.borrow().left.clone());
+                let r_depth = Self::max_depth(node.borrow().right.clone());
+                return l_depth.max(r_depth)+1;
             }
             None => 0,
         }
